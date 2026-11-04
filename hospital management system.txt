@@ -1,0 +1,257 @@
+using System;
+using System.Collections.Generic;
+
+namespace hospitalmanagementsystem
+{
+    public class patientbl
+    {
+        public string name;
+        public int age;
+        public string disease;
+        public string doctor;
+        public string history;
+
+        public patientbl(string name, int age, string disease, string doctor, string history)
+        {
+            this.name = name;
+            this.age = age;
+            this.disease = disease;
+            this.doctor = doctor;
+            this.history = history;
+        }
+    }
+
+    public class patientdl
+    {
+        public static List<patientbl> patientList = new List<patientbl>();
+
+        public static void addpatient(patientbl patient)
+        {
+            patientList.Add(patient);
+        }
+    }
+
+    public class patientui
+    {
+        public static void addpatientscreen()
+        {
+            Console.Clear();
+            Console.WriteLine("===== Add Patient =====\n");
+
+            Console.Write("Name    : "); 
+            string name = Console.ReadLine();
+
+            Console.Write("Age     : "); 
+            int age = int.Parse(Console.ReadLine());
+
+            Console.Write("Disease : "); 
+            string disease = Console.ReadLine();
+
+            Console.Write("Doctor  : "); 
+            string doctor = Console.ReadLine();
+
+            Console.Write("History : "); 
+            string history = Console.ReadLine();
+
+            patientbl p = new patientbl(name, age, disease, doctor, history);
+            patientdl.addpatient(p);
+
+            Console.WriteLine("\nPatient Added Successfully!");
+            Console.WriteLine("\nPress any key to continue...");
+            Console.ReadKey();
+        }
+
+        public static void viewhistoryscreen()
+        {
+            Console.Clear();
+            Console.WriteLine("===== Medical History Panel =====\n");
+
+            Console.Write("Enter Patient Name to Search: "); 
+            string name = Console.ReadLine();
+            
+            bool found = false;
+
+            foreach (patientbl p in patientdl.patientList)
+            {
+                if (p.name == name)
+                {
+                    Console.WriteLine($"\nName    : {p.name}");
+                    Console.WriteLine($"Disease : {p.disease}");
+                    Console.WriteLine($"History : {p.history}");
+                    Console.WriteLine("-----------------------------------");
+                    found = true;
+                }
+            }
+
+            if (!found) 
+            {
+                Console.WriteLine("\nPatient Not Found!");
+            }
+
+            Console.WriteLine("\nPress any key to continue...");
+            Console.ReadKey();
+        }
+
+        public static void billingscreen()
+        {
+            Console.Clear();
+            Console.WriteLine("===== Discharge & Billing Desk =====\n");
+
+            Console.Write("Enter Name to Discharge: "); 
+            string name = Console.ReadLine();
+            
+            patientbl target = null;
+
+            foreach (patientbl p in patientdl.patientList)
+            {
+                if (p.name == name) 
+                { 
+                    target = p; 
+                    break; 
+                }
+            }
+
+            if (target != null)
+            {
+                Console.Write("Days Admitted           : "); 
+                int days = int.Parse(Console.ReadLine());
+
+                int bill = days * 2000;
+
+                Console.WriteLine("\n===================================");
+                Console.WriteLine($"Total Bill              : {bill} PKR");
+                Console.WriteLine("===================================");
+                Console.WriteLine("Patient Discharged Successfully!");
+
+                patientdl.patientList.Remove(target);
+            }
+            else
+            {
+                Console.WriteLine("\nPatient Not Found!");
+            }
+
+            Console.WriteLine("\nPress any key to continue...");
+            Console.ReadKey();
+        }
+
+        public static void viewallscreen()
+        {
+            Console.Clear();
+            Console.WriteLine("===== All Patients Record =====\n");
+
+            if (patientdl.patientList.Count == 0)
+            {
+                Console.WriteLine("No records found.");
+            }
+            else
+            {
+                foreach (patientbl p in patientdl.patientList)
+                {
+                    Console.WriteLine($"Name     : {p.name}");
+                    Console.WriteLine($"Age      : {p.age}");
+                    Console.WriteLine($"Disease  : {p.disease}");
+                    Console.WriteLine($"Doctor   : {p.doctor}");
+                    Console.WriteLine("-----------------------------------");
+                }
+            }
+
+            Console.WriteLine("\nPress any key to continue...");
+            Console.ReadKey();
+        }
+
+        public static void searchscreen()
+        {
+            Console.Clear();
+            Console.WriteLine("===== Search Patient =====\n");
+
+            Console.Write("Enter Name to Search: "); 
+            string name = Console.ReadLine();
+            
+            bool found = false;
+
+            foreach (patientbl p in patientdl.patientList)
+            {
+                if (p.name == name)
+                {
+                    Console.WriteLine($"\nFound! Name: {p.name} | Disease: {p.disease} | Doctor: {p.doctor}");
+                    found = true;
+                }
+            }
+
+            if (!found)
+            {
+                Console.WriteLine("\nPatient Not Found!");
+            }
+
+            Console.WriteLine("\nPress any key to continue...");
+            Console.ReadKey();
+        }
+
+        public static void adminmenu()
+        {
+            while (true)
+            {
+                Console.Clear();
+                Console.WriteLine("===== Admin Panel =====");
+                Console.WriteLine("1. View All Patients");
+                Console.WriteLine("2. Search Patient");
+                Console.WriteLine("3. Logout");
+                Console.Write("\nChoice: ");
+
+                int ch = int.Parse(Console.ReadLine());
+
+                if (ch == 1) viewallscreen();
+                else if (ch == 2) searchscreen();
+                else if (ch == 3) break;
+            }
+        }
+
+        public static void adminlogin()
+        {
+            Console.Clear();
+            Console.WriteLine("===== Admin Login =====\n");
+
+            Console.Write("Username : "); 
+            string u = Console.ReadLine();
+
+            Console.Write("Password : "); 
+            string p = Console.ReadLine();
+
+            if (u == "admin" && p == "123") 
+            {
+                adminmenu();
+            }
+            else 
+            { 
+                Console.WriteLine("\nWrong Credentials!"); 
+                Console.ReadKey(); 
+            }
+        }
+    }
+
+    internal class program
+    {
+        static void Main(string[] args)
+        {
+            while (true)
+            {
+                Console.Clear();
+                Console.WriteLine("===== Hospital Management System =====");
+                Console.WriteLine("1. Add New Patient");
+                Console.WriteLine("2. Check Patient Medical History");
+                Console.WriteLine("3. Discharge & Billing Desk");
+                Console.WriteLine("4. Admin Database Login");
+                Console.WriteLine("5. Exit System");
+                Console.Write("\nOption: ");
+
+                int ch = int.Parse(Console.ReadLine());
+
+                if (ch == 1) patientui.addpatientscreen();
+                else if (ch == 2) patientui.viewhistoryscreen();
+                else if (ch == 3) patientui.billingscreen();
+                else if (ch == 4) patientui.adminlogin();
+                else if (ch == 5) break;
+            }
+        }
+    }
+}
